@@ -1,0 +1,50 @@
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+
+# Ignore logs and temporary files
+*.log
+*.swp
+*.swo
+*.DS_Store
+*.bak
+
+# Ignore virtual environment files
+venv/
+.env
+logs/
+
+# Ignore Python bytecode cache
+__pycache__/
+
+# Ignore environment-specific files
+.env
+
+
+# Ignore sensitive information (e.g., secrets, credentials)
+secrets/
+
+# Ignore Visual Studio Code (VSCode)-specific files and directories
+.vscode/
+.settings.json
+.code-workspace
+.history/
+
+# Ignore IDE-specific files
+.idea/
+
+# Ignore distribution and build directories
+dist/
+build/
+*.egg-info/
+
+# Ignore cached files
+*.cache
+
+# Ignore coverage report
+.coverage
+
+# Ignore pipenv environment
+Pipfile.lock
+
+

@@ -1,0 +1,82 @@
+version: "3.7"
+
+services:
+  db-mysql:
+    image: mysql:5.7
+    container_name: db-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  db-psql:
+    image: postgres:13
+    container_name: db-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  webserver:
+    image: apache/airflow:2.7.2
+    restart: always
+    depends_on:
+      - airflow-postgres
+      - db-mysql
+      - db-psql
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
+      - AIRFLOW__CORE__FERNET_KEY=r_csb58JD31PA0l1sDpFL0qYbqUo-fzee74huySngos=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=r_csb58JD31PA0l1sDpFL0qYbqUo-fzee74huySngos=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+    ports:
+      - "8080:8080"
+    command: webserver
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /opt/airflow/airflow-webserver.pid ]"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  scheduler:
+    image: apache/airflow:2.7.2
+    restart: always
+    depends_on:
+      - webserver
+      - db-mysql
+      - db-psql
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
+      - AIRFLOW__CORE__FERNET_KEY=r_csb58JD31PA0l1sDpFL0qYbqUo-fzee74huySngos=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+    command: scheduler
+
+  airflow-postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+volumes:
+  mysql-data:
+  postgres-data:
+  postgres-db-volume:
+
+networks:
+  default:
