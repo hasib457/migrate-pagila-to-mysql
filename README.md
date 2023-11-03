@@ -86,7 +86,6 @@ For each table, the following tasks are performed:
 
 Before executing this Project, make sure to set up the required containers using Docker Compose. Here are the steps to do so:
 1. Navigate to the project directory:
-    - `cd airflow`
     - `docker-compose up -d`
         - This will launch the following containers:
             - PostgreSQL: The source database from which data will be migrated.

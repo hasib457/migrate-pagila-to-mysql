@@ -40,7 +40,8 @@ services:
       - ./plugins:/opt/airflow/plugins
     ports:
       - "8080:8080"
-    command: webserver
+    command: bash -c "airflow db init  && airflow webserver"
+      
     healthcheck:
       test: ["CMD-SHELL", "[ -f /opt/airflow/airflow-webserver.pid ]"]
       interval: 30s
@@ -62,7 +63,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
-    command: scheduler
+    command: bash -c "airflow users create --username airflow --password airflow --firstname Admin --lastname User --role Admin --email admin@example.com && airflow scheduler"
 
   airflow-postgres:
     image: postgres:13
