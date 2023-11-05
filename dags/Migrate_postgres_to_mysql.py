@@ -13,26 +13,6 @@ from airflow.operators.empty import EmptyOperator
 from helpers import SqlQueries
 
 
-# SQL Queries for table creation
-create_tables_queries = [
-    SqlQueries.create_db_database,
-    SqlQueries.create_actor,
-    SqlQueries.create_address,
-    SqlQueries.create_category,
-    SqlQueries.create_city,
-    SqlQueries.create_country,
-    SqlQueries.create_customer,
-    SqlQueries.create_film,
-    SqlQueries.create_film_actor,
-    SqlQueries.create_film_category,
-    SqlQueries.create_inventory,
-    SqlQueries.create_language,
-    SqlQueries.create_payment,
-    SqlQueries.create_rental,
-    SqlQueries.create_staff,
-    SqlQueries.create_store,
-]
-
 # dictionary that maps table names to their "last_update" column names and creation query
 tables = {
     "actor": ["last_update", SqlQueries.create_actor],
